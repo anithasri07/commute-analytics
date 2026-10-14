@@ -73,7 +73,7 @@ while d<=END:
     d+=dt.timedelta(days=1)
 
 def w(name,rows,cols):
-    with open(f"data/{name}.csv","w",newline="") as f:
+    with open(f"{name}.csv","w",newline="") as f:
         wr=csv.DictWriter(f,fieldnames=cols); wr.writeheader()
         for r in rows: wr.writerow({c:r[c] for c in cols})
 w("sites",[dict(site_id=a,site_name=b,city=c) for a,b,c in SITES],["site_id","site_name","city"])

@@ -24,23 +24,23 @@ CommuteCo's operations team sees rising complaints about employees being marked 
 | `employees` | 2,400 | Site, department and shift |
 | `sites`, `vendors` | 3, 4 | Lookup tables |
 
-Period: July to September 2026. Schema: [`sql/01_schema.sql`](sql/01_schema.sql).
+Period: July to September 2026. Schema: [`01_schema.sql`](01_schema.sql).
 
 ## Key findings
 
 **1. One vendor causes most wrong no-show marks.** CityWheels runs 33% of trips but is behind 57% of disputes where the employee was proven right. Its cabs arrive 11.7 minutes late on average, only 22% arrive within 5 minutes, and its rating is 3.68 against 4.3-4.4 for the others.
 
-![Vendor share of trips vs wrong no-show marks](images/vendor_wrong_marks.png)
+![Vendor share of trips vs wrong no-show marks](vendor_wrong_marks.png)
 
 **2. Late cabs create no-shows.** When the cab is more than 10 minutes late, the no-show rate doubles (4.5% vs 2.2%). Many of these are employees who gave up waiting or were marked absent at the wrong time.
 
 **3. Ratings collapse after 10 minutes of delay.** Ratings hold at about 4.4 up to 5 minutes late, then drop to 3.6 at 11-20 minutes and 2.8 beyond 20 minutes, where 36% of riders give 1 or 2 stars.
 
-![Average rating by cab delay](images/delay_vs_rating.png)
+![Average rating by cab delay](delay_vs_rating.png)
 
 **4. Night shifts are the riskiest.** The 22:00 and 02:00 shifts have no-show rates of about 3.7%, roughly 60% higher than day shifts (about 2.3%).
 
-![No-show rate by shift](images/no_show_by_shift.png)
+![No-show rate by shift](no_show_by_shift.png)
 
 **5. Site B has a pickup-point problem.** At Site B, 45% of no-shows are disputed and 74% of disputes are accepted, far above Sites A and C (about 31% disputed, 50-54% accepted). This points to a location issue (wrong gate, hard-to-find pickup point), not employee behaviour.
 
@@ -64,34 +64,33 @@ Recommendation 2 is developed in detail in my PRD: [Reducing No-Show Disputes](h
 
 ## SQL techniques used
 
-Aggregation with conditional counts, CASE bucketing, multi-table joins, CTEs, window functions (`LAG`, `ROW_NUMBER`, `SUM() OVER()`), rolling-window logic (3 no-shows in 30 days), median calculation, week-over-week trends and cohort retention. All queries are in [`sql/02_analysis.sql`](sql/02_analysis.sql), each answering one business question.
+Aggregation with conditional counts, CASE bucketing, multi-table joins, CTEs, window functions (`LAG`, `ROW_NUMBER`, `SUM() OVER()`), rolling-window logic (3 no-shows in 30 days), median calculation, week-over-week trends and cohort retention. All queries are in [`02_analysis.sql`](02_analysis.sql), each answering one business question.
 
 ## How to run
 
 ```bash
 pip install matplotlib
-python generate_data.py   # creates data/*.csv
+python generate_data.py   # creates the CSV files
 python load_sqlite.py     # loads them into commute.db (SQLite)
 python run_queries.py     # runs every query and prints results
-python make_charts.py     # regenerates the charts in images/
+python make_charts.py     # regenerates the charts in 
 ```
 
 The queries use SQLite syntax; comments note the PostgreSQL equivalents where they differ.
 
 ## Repository structure
 
-```
-├── data/                 # synthetic CSVs
-├── sql/
-│   ├── 01_schema.sql     # table definitions
-│   └── 02_analysis.sql   # 12 business questions in SQL
-├── images/               # charts used in this README
-├── generate_data.py      # synthetic data generator
-├── load_sqlite.py        # loads CSVs into SQLite
-├── run_queries.py        # runs all queries
-├── make_charts.py        # builds the charts
-└── results.txt           # output of every query
-```
+| File | What it is |
+| --- | --- |
+| `trips.csv`, `employees.csv`, `feedback.csv`, `disputes.csv`, `sites.csv`, `vendors.csv` | Synthetic dataset |
+| `01_schema.sql` | Table definitions |
+| `02_analysis.sql` | 12 business questions answered in SQL |
+| `results.txt` | Output of every query |
+| `*.png` | Charts used in this README |
+| `generate_data.py` | Synthetic data generator |
+| `load_sqlite.py` | Loads the CSVs into SQLite |
+| `run_queries.py` | Runs all queries |
+| `make_charts.py` | Builds the charts |
 
 ## Author
 
