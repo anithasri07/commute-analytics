@@ -1,0 +1,89 @@
+
+-- Q1. Overall health: trips, completion, no-show and cancellation rates by month
+month | trips | completed_pct | no_show_pct | cancelled_pct
+2026-07 | 43848 | 93.48 | 2.83 | 3.69
+2026-08 | 46445 | 93.55 | 2.8 | 3.65
+2026-09 | 54285 | 93.83 | 2.58 | 3.58
+
+-- Q2. Which shifts have the highest no-show rate?
+shift_time | trips | no_shows | no_show_pct
+22:00 | 26705 | 995 | 3.73
+02:00 | 18584 | 686 | 3.69
+06:00 | 11089 | 260 | 2.34
+18:00 | 12776 | 295 | 2.31
+14:00 | 29392 | 678 | 2.31
+09:00 | 46032 | 1031 | 2.24
+
+-- Q3. Vendor scorecard: punctuality, no-shows and rider rating
+vendor_name | trips | avg_delay_min | on_time_pct | no_show_pct | avg_rating
+CityWheels | 48201 | 11.7 | 22.3 | 3.38 | 3.68
+MetroCabs | 38111 | 5.7 | 48.7 | 2.55 | 4.34
+GreenFleet | 26529 | 4.6 | 58.6 | 2.56 | 4.4
+SwiftRide | 31737 | 3.6 | 67.6 | 2.1 | 4.43
+
+-- Q4. How does cab delay affect rider rating?
+delay_bucket | rated_trips | avg_rating | low_rating_pct
+1. early / on time | 5959 | 4.44 | 0.2
+2. 1-5 min late | 12706 | 4.47 | 0.2
+3. 6-10 min late | 11832 | 4.25 | 0.6
+4. 11-20 min late | 8322 | 3.63 | 6.6
+5. 20+ min late | 1805 | 2.76 | 35.7
+
+-- Q5. Do late cabs cause more no-shows?
+arrival | trips | no_show_pct
+cab > 10 min late | 35681 | 4.53
+cab within 10 min | 104933 | 2.22
+
+-- Q6. No-show disputes by site: how often raised, how often the employee was right
+site_name | no_shows | disputes | dispute_rate_pct | accepted_pct
+Site B - Business Bay | 1682 | 763 | 45.4 | 73.8
+Site A - Tech Park | 1553 | 487 | 31.4 | 54.0
+Site C - Riverside | 710 | 222 | 31.3 | 49.5
+
+-- Q7. How long do disputes take to resolve? (median via window function)
+median_hours | over_24h_pct
+80.0 | 87.8
+
+-- Q8. Employees at risk of a booking block: 3+ no-shows within any rolling 30 days
+employees_hit_3_in_30_days
+352
+
+-- Q9. Weekly trend of no-show rate with week-over-week change
+week | no_show_pct | wow_change
+2026-W26 | 3.01 | None
+2026-W27 | 2.57 | -0.44
+2026-W28 | 2.9 | 0.33
+2026-W29 | 2.88 | -0.02
+2026-W30 | 2.88 | 0.0
+2026-W31 | 2.56 | -0.32
+2026-W32 | 2.67 | 0.11
+2026-W33 | 3.07 | 0.4
+2026-W34 | 2.74 | -0.33
+2026-W35 | 2.71 | -0.03
+2026-W36 | 2.51 | -0.2
+2026-W37 | 2.68 | 0.17
+2026-W38 | 2.81 | 0.13
+2026-W39 | 2.22 | -0.59
+
+-- Q10. Cancellations by day of week
+weekday | trips | cancelled_pct | late_cancel_pct
+Sun | 3997 | 3.33 | 0.85
+Mon | 26881 | 6.1 | 1.49
+Tue | 27288 | 3.13 | 0.8
+Wed | 28958 | 3.19 | 0.73
+Thu | 26782 | 3.0 | 0.8
+Fri | 26688 | 3.01 | 0.7
+Sat | 3984 | 2.59 | 0.75
+
+-- Q11. Rider retention by first-ride month (cohort analysis)
+cohort | riders | month_1_retained_pct | month_2_retained_pct
+2026-07 | 1758 | 97.0 | 90.4
+2026-08 | 343 | 99.4 | None
+2026-09 | 291 | None | None
+
+-- Q12. Which vendors cause the most wrong no-show marks (disputes accepted)?
+vendor_name | accepted_disputes | share_of_wrong_marks_pct | share_of_trips_pct
+CityWheels | 538 | 57.5 | 33.3
+MetroCabs | 208 | 22.2 | 26.4
+GreenFleet | 131 | 14.0 | 18.3
+SwiftRide | 59 | 6.3 | 22.0
