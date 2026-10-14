@@ -94,4 +94,4 @@ The queries use SQLite syntax; comments note the PostgreSQL equivalents where th
 
 ## Author
 
-**Anithasri M** · Product Specialist, B2B SaaS · [LinkedIn](#) · [Portfolio](#)
+**Anithasri M** · Product Specialist, B2B SaaS · [www.linkedin.com/in/anithasri-manimaran](#) · 
